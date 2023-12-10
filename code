@@ -1,0 +1,18 @@
+sdata = [5, 6, 8, 9; 6, 8, 10, 6; 9, 5, 8, 5; 9, 8, 7, 10];
+%sdata - given matrix
+%ns - number of subordinates
+%nt- number of task
+[ns, nt] = size(sdata);
+f = reshape(sdata', [], 1);
+intcon = 1:(ns * nt);
+lb = zeros(ns * nt, 1);
+ub = ones(ns * nt, 1);
+aeq = zeros(nt, ns * nt);
+for i = 1:nt
+    aeq(i, (i - 1) * ns + 1:i * ns) = 1;
+end
+beq = ones(nt, 1);
+x = intlinprog(f, intcon, [], [], aeq, beq, lb, ub);
+allocationmatrix = reshape(x, ns, nt);
+disp("Task Allocation Matrix:");
+disp(allocationmatrix);
